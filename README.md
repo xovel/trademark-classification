@@ -6,6 +6,12 @@
 
 整体项目分为三个阶段，第一个是纯前端静态渲染数据的方式；第二个是后台搭建模拟服务器，使用 API 进行数据的搜索过滤；第三个阶段是支持真实的商标名称查询（数据来源为[中国商标网](zgsbw)）。
 
+## 运行
+
+第一个阶段时直接在浏览器里面访问 `index.html` 即可。
+
+[在线预览](http://htmlpreview.github.io/?https://github.com/xovel/trademark-classification/blob/master/index.html)
+
 ## 技术栈
 
 - `es6`
@@ -16,11 +22,11 @@
 
 [zgsbw]: http://sbj.saic.gov.cn/
 
-Q：为什么用 `vue` 和 `element-ui`？
-A：一切仅用于学习。
+- 为什么用 `vue` 和 `element-ui`？
+> 深入了解一下 `element-ui` 的组件细节。
 
-Q：为什么不引入指定的 `element-ui` 的组件？
-A：追求效率，不想动用 `node_modules` 的资源。可以看到本项目在第一阶段的时候都不打算引入 `package.json`。
+- Q：为什么不引入指定的 `element-ui` 的组件？
+> 追求效率，不想动用 `node_modules` 的资源。可以看到本项目在第一阶段的时候都不打算引入 `package.json`。
 
 ## 知识点整理
 
