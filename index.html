@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>商标分类</title>
+  <meta name="format-detection" content="telephone=no" />
+  <meta content="yes" name="apple-mobile-web-app-capable" />
+  <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height"
+  />
+  <!-- <script src="https://cdn.bootcss.com/vue/2.5.13/vue.js"></script>
+  <link href="https://cdn.bootcss.com/normalize/7.0.0/normalize.css" rel="stylesheet">
+  <link href="https://cdn.bootcss.com/element-ui/2.0.9/theme-chalk/index.css" rel="stylesheet">
+  <script src="https://cdn.bootcss.com/element-ui/2.0.9/index.js"></script> -->
+  <link href="./vendor/normalize.css" rel="stylesheet">
+  <link href="./vendor/element-ui.css" rel="stylesheet">
+  <script src="./vendor/vue.js"></script>
+  <script src="./vendor/element-ui.js"></script>
+  <script src="./all.js"></script>
+  <script src="./util.js"></script>
+
+  <style>
+    /* body {
+  font-family: 'San Francisco','Noto SansCJK','Microsoft Yahei', Helvetica, Arial;
+} */
+
+    #app {
+      margin: 20px;
+      border: 2px solid #eee;
+      border-radius: 5px;
+      padding: 5px;
+    }
+
+    .ellipsis {
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    .el-checkbox {
+      margin-right: 10px;
+      width: 40px;
+    }
+
+    .el-checkbox+.el-checkbox {
+      margin-left: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+
+    <el-input placeholder="输入关键字进行过滤" v-model="filterText" @keydown.native.enter="searchTree">
+      <el-button slot="append" icon="el-icon-search" @click="searchTree"></el-button>
+    </el-input>
+    <!-- <el-checkbox v-model="checkAll" @change="handleCheckAllChange" :indeterminate="isIndeterminate">
+  全选</el-checkbox>
+<el-checkbox-group v-model="checkList" @change="handleCheckedCitiesChange">
+  <el-checkbox v-for="i in 45" :label="i"></el-checkbox>
+</el-checkbox-group> -->
+
+    <el-tree class="filter-tree" :data="treeData" :props="defaultProps" :filter-node-method="filterNode" ref="tree" :expand-on-click-node="false"
+      :render-content="renderContent">
+    </el-tree>
+
+    <el-dialog :visible.sync="visible" title="查看详细" width="60%">
+      <p>编码：{{curData.code}}</p>
+      <!-- <p>编号：{{curData.id}}</p> -->
+      <p>内容：{{curData.name}}</p>
+    </el-dialog>
+
+  </div>
+  <script>
+    var allList = (function () {
+      var ret = [];
+      for (var i = 1; i <= 45; i++) {
+        ret.push(i);
+      }
+      return ret;
+    })();
+
+    var treeData = (function () {
+      var nc = allData.nc;
+      var ret = [];
+      for (var i = 0; i < nc.length; i++) {
+        var item = nc[i];
+        item.children = genChildren(allData[item.code], '', 1);
+        ret.push(item);
+      }
+      return ret;
+    })();
+
+    function genChildren(data, pid, level) {
+      var ret = [];
+      for (var i = 0; i < data.length; i++) {
+        var temp = data[i];
+        if (temp.pid === pid) {
+          if (level < 3) {
+            temp.children = genChildren(data, temp.id, level + 1);
+          }
+          ret.push(temp);
+        }
+      }
+      return ret;
+    }
+
+    new Vue({
+      el: '#app',
+      created() {
+        this.treeData = allData.nc;
+      },
+      methods: {
+        filterNode(value, data) {
+          data
+          if (!value) return true;
+          return data.name.indexOf(value) !== -1;
+        },
+        searchTree() {
+          this.$refs.tree.filter(this.filterText)
+        },
+        showText() {
+          let curNode = this.$refs.tree.getCurrentNode();
+          this.curText = curNode.name;
+          this.visible = true;
+        },
+        renderContent(h, {
+          node,
+          data,
+          store
+        }) {
+          var _this = this;
+          var title = data.code + ' ' + data.name;
+          return h('div', {
+            'class': 'ellipsis',
+            attrs: {
+              title: title
+            },
+            on: {
+              dblclick() {
+                console.log(arguments)
+                _this.curData = data;
+                _this.visible = true;
+              }
+            }
+          }, title);
+        },
+        handleCheckedCitiesChange(value) {
+          let checkedCount = value.length;
+          this.checkAll = checkedCount === allList.length;
+          this.isIndeterminate = checkedCount > 0 && checkedCount < allList.length;
+        },
+        handleCheckAllChange(val) {
+          this.checkList = val ? allList : [];
+          this.isIndeterminate = false;
+        },
+        nodeClick(data, node, $self) {
+          this.curText = data.name;
+          this.curData = data;
+          this.visible = true;
+          console.log(data)
+        }
+      },
+      data: function () {
+        return {
+          curText: '',
+          curData: {},
+          visible: false,
+          filterText: '',
+          treeData: [],
+          defaultProps: {
+            children: 'children',
+            label: 'name'
+          },
+          checkList: allList,
+          checkAll: true,
+          isIndeterminate: false
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
