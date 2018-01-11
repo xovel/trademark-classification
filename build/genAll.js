@@ -3,12 +3,12 @@ const path = require('path');
 
 let allData = [];
 
-let curList = fs.readdirSync(path.join(__dirname, 'data', 'd'));
+let curList = fs.readdirSync(path.join(__dirname, '..', 'data', 'd'));
 
-let nc = require(path.join(__dirname, 'data', 'nc.json'));
+let nc = require(path.join(__dirname, '..', 'data', 'nc.json'));
 
 nc.forEach(item => {
-  let curData = require(path.join(__dirname, 'data', 'd', `${item.code}.json`));
+  let curData = require(path.join(__dirname, '..', 'data', 'd', `${item.code}.json`));
   allData.push({
     id: item.id,
     code: item.code,
@@ -38,27 +38,9 @@ function genChildren(data, pid, level) {
   return ret;
 }
 
-
-
-// for (let i = 0; i < curList.length; i++) {
-//   let item = curList[i];
-//   let name = item.split('.')[0];
-//   let curData = require(path.join(__dirname, 'data', item));
-
-//   if (name !== 'nc') {
-//     curData.forEach(sub => {
-//       if (sub.pid === '') {
-//         sub.pid = name;
-//       }
-//     });
-//   }
-
-//   allData = allData.concat(curData);
-
-// }
-
 const log = console.log;
-wFile(path.join(__dirname, 'data', 'all.json'), JSON.stringify(allData, null, '  '));
+// wFile(path.join(__dirname, 'data', 'all.json'), JSON.stringify(allData, null, '  '));
+wFile(path.join(__dirname, '..', 'data', 'all.json'), JSON.stringify(allData));
 
 function wFile(filePath, content) {
   fs.writeFile(filePath, content, (err) => {

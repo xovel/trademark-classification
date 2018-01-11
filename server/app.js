@@ -4,8 +4,6 @@ const path = require('path');
 var express = require('express');
 var app = express();
 
-const genTreeData = require('./genTreeData');
-
 const allData = require('../data/all.json');
 
 app.use(express.static(path.join(__dirname, '..', 'vendor')));
@@ -20,7 +18,7 @@ app.get('/api/search', function (req, res) {
   let query = req.query;
 
   if (query.name) {
-    let { sret, num } = searchData(allData, query.name);
+    let { sret, num } = searchData(allData, query.name, !!query.code);
     ret = sret;
     n = num;
   } else {
@@ -39,7 +37,7 @@ var server = app.listen(3000, function () {
 
   var port = server.address().port;
 
-  console.log('Example app listening at http://localhost:%s', port);
+  console.log('Project `trademark-classification` listening at http://localhost:%s', port);
 });
 
 function searchData(data, name, codeFlag) {

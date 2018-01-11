@@ -9,7 +9,7 @@ while (i <= 45) {
 
   let name = i < 10 ? '0' + i : i;
 
-  let curPath = path.join(__dirname, 'data', name + '.json');
+  let curPath = path.join(__dirname, '..', 'data', name + '.json');
 
   if (!fs.existsSync(curPath)) {
     n++;

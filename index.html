@@ -19,7 +19,6 @@
   <script src="./vendor/element-ui.js"></script>
 
   <style>
-
     #app {
       margin: 20px;
       border: 2px solid #eee;
@@ -56,8 +55,7 @@
       <el-button slot="append" icon="el-icon-search" @click="searchTree"></el-button>
     </el-input>
 
-    <el-tree class="filter-tree" :data="treeData" :props="defaultProps" ref="tree" :expand-on-click-node="false"
-      :render-content="renderContent">
+    <el-tree class="filter-tree" :data="treeData" :props="defaultProps" ref="tree" :expand-on-click-node="false" :render-content="renderContent">
     </el-tree>
 
     <el-dialog :visible.sync="visible" title="查看详细" width="60%">
@@ -70,14 +68,20 @@
     new Vue({
       el: '#app',
       created() {
-
- fetch('/api/search').then(res=>res.json().then(data=>this.treeData=data.data));
-
-
+        fetch('/api/search').then(res => res.json().then(data => this.treeData = data.data));
       },
       methods: {
         searchTree() {
- fetch('/api/search?name=' + this.filterText).then(res=>res.json().then(data=>this.treeData=data.data));
+          const loading = this.$loading({
+            lock: true,
+            text: '加载中...',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
+          });
+          fetch('/api/search?name=' + this.filterText).then(res => res.json().then(data => {
+            this.treeData = data.data;
+            loading.close();
+          }));
         },
         renderContent(h, {
           node,
