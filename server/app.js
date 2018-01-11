@@ -48,14 +48,16 @@ function searchData(data, name, codeFlag) {
     let le1 = false;
     let data1 = data[i];
     let ret1 = [];
+    let children1 = data1.children || [];
 
-    for (let j = 0; j < data1.children.length; j++) {
+    for (let j = 0; j < children1.length; j++) {
       let le2 = false;
-      let data2 = data1.children[j];
+      let data2 = children1[j];
       let ret2 = [];
+      let children2 = data2.children || [];
 
-      for (let k = 0; k < data2.children.length; k++) {
-        let data3 = data2.children[k];
+      for (let k = 0; k < children2.length; k++) {
+        let data3 = children2[k];
 
         if (checkData(data3, name, codeFlag)) {
           le2 = true;
