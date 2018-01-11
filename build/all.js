@@ -13,7 +13,6 @@ nc.forEach(item => {
     id: item.id,
     code: item.code,
     name: item.name,
-    pid: '',
     children: genChildren(curData, '', 1)
   });
 });
@@ -24,13 +23,16 @@ function genChildren(data, pid, level) {
   if (level < 3) {
     data.forEach(item => {
       if ((item.pid === pid && level > 1) || (level === 1 && item.isParent === 'true')) {
-        ret.push({
+        let temp = {
           id: item.id,
           code: item.code,
-          name: item.name,
-          pid: pid,
-          children: genChildren(data, item.id, level + 1)
-        });
+          name: item.name
+        };
+        let children = genChildren(data, item.id, level + 1);
+        if (children.length > 0) {
+          temp.children = children;
+        }
+        ret.push(temp);
       }
     });
   }
@@ -39,7 +41,7 @@ function genChildren(data, pid, level) {
 }
 
 const log = console.log;
-// wFile(path.join(__dirname, 'data', 'all.json'), JSON.stringify(allData, null, '  '));
+// wFile(path.join(__dirname, '..', 'data', 'all.json'), JSON.stringify(allData, null, '  '));
 wFile(path.join(__dirname, '..', 'data', 'all.json'), JSON.stringify(allData));
 
 function wFile(filePath, content) {
