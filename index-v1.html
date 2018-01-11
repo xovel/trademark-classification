@@ -17,8 +17,12 @@
   <link href="./vendor/element-ui.css" rel="stylesheet">
   <script src="./vendor/vue.js"></script>
   <script src="./vendor/element-ui.js"></script>
+  <script src="./all.js"></script>
 
   <style>
+    /* body {
+  font-family: 'San Francisco','Noto SansCJK','Microsoft Yahei', Helvetica, Arial;
+} */
 
     #app {
       margin: 20px;
@@ -55,29 +59,75 @@
     <el-input placeholder="输入关键字进行过滤" v-model="filterText" @keydown.native.enter="searchTree">
       <el-button slot="append" icon="el-icon-search" @click="searchTree"></el-button>
     </el-input>
+    <!-- <el-checkbox v-model="checkAll" @change="handleCheckAllChange" :indeterminate="isIndeterminate">
+  全选</el-checkbox>
+<el-checkbox-group v-model="checkList" @change="handleCheckedCitiesChange">
+  <el-checkbox v-for="i in 45" :label="i"></el-checkbox>
+</el-checkbox-group> -->
 
-    <el-tree class="filter-tree" :data="treeData" :props="defaultProps" ref="tree" :expand-on-click-node="false"
+    <el-tree class="filter-tree" :data="treeData" :props="defaultProps" :filter-node-method="filterNode" ref="tree" :expand-on-click-node="false"
       :render-content="renderContent">
     </el-tree>
 
     <el-dialog :visible.sync="visible" title="查看详细" width="60%">
       <p>编码：{{curData.code}}</p>
+      <!-- <p>编号：{{curData.id}}</p> -->
       <p>内容：{{curData.name}}</p>
     </el-dialog>
 
   </div>
   <script>
+    var allList = (function () {
+      var ret = [];
+      for (var i = 1; i <= 45; i++) {
+        ret.push(i);
+      }
+      return ret;
+    })();
+
+    var treeData = (function () {
+      var nc = allData.nc;
+      var ret = [];
+      for (var i = 0; i < nc.length; i++) {
+        var item = nc[i];
+        item.children = genChildren(allData[item.code], '', 1);
+        ret.push(item);
+      }
+      return ret;
+    })();
+
+    function genChildren(data, pid, level) {
+      var ret = [];
+      for (var i = 0; i < data.length; i++) {
+        var temp = data[i];
+        if (temp.pid === pid) {
+          if (level < 3) {
+            temp.children = genChildren(data, temp.id, level + 1);
+          }
+          ret.push(temp);
+        }
+      }
+      return ret;
+    }
+
     new Vue({
       el: '#app',
       created() {
-
- fetch('/api/search').then(res=>res.json().then(data=>this.treeData=data.data));
-
-
+        this.treeData = allData.nc;
       },
       methods: {
+        filterNode(value, data) {
+          data
+          if (!value) return true;
+          return data.name.indexOf(value) !== -1;
+        },
         searchTree() {
- fetch('/api/search?name=' + this.filterText).then(res=>res.json().then(data=>this.treeData=data.data));
+          this.$refs.tree.filter(this.filterText)
+        },
+        showText() {
+          let curNode = this.$refs.tree.getCurrentNode();
+          this.curText = curNode.name;
+          this.visible = true;
         },
         renderContent(h, {
           node,
@@ -99,6 +149,21 @@
               }
             }
           }, title);
+        },
+        handleCheckedCitiesChange(value) {
+          let checkedCount = value.length;
+          this.checkAll = checkedCount === allList.length;
+          this.isIndeterminate = checkedCount > 0 && checkedCount < allList.length;
+        },
+        handleCheckAllChange(val) {
+          this.checkList = val ? allList : [];
+          this.isIndeterminate = false;
+        },
+        nodeClick(data, node, $self) {
+          this.curText = data.name;
+          this.curData = data;
+          this.visible = true;
+          console.log(data)
         }
       },
       data: function () {
@@ -112,6 +177,7 @@
             children: 'children',
             label: 'name'
           },
+          checkList: allList,
           checkAll: true,
           isIndeterminate: false
         }

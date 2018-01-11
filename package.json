@@ -1,0 +1,30 @@
+{
+  "name": "trademark-classification",
+  "version": "0.0.2",
+  "description": "中国商标分类",
+  "private": true,
+  "scripts": {
+    "dev": "node ./server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xovel/trademark-classification.git"
+  },
+  "keywords": [
+    "trademard",
+    "classification",
+    "vue",
+    "element-ui",
+    "express"
+  ],
+  "author": "xovel",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xovel/trademark-classification/issues"
+  },
+  "homepage": "https://github.com/xovel/trademark-classification#readme",
+  "dependencies": {
+    "express": "^4.16.2"
+  }
+}
