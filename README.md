@@ -15,17 +15,9 @@
 - `node`
 - `express`
 
-[zgsbw]: http://sbj.saic.gov.cn/
-
-- 为什么用 `vue` 和 `element-ui`？
-> 深入了解一下 `element-ui` 的组件细节。
-
 ## 第一阶段
 
 [在线预览](http://htmlpreview.github.io/?https://github.com/xovel/trademark-classification/blob/master/index-v1.html)
-
-- Q：为什么不引入指定的 `element-ui` 的组件？
-> 追求效率，不想动用 `node_modules` 的资源。可以看到本项目在第一阶段的时候都不打算引入 `package.json`。
 
 ## 第二阶段
 
@@ -56,8 +48,9 @@
 > 特别说明：
 > - JS 代码为 ES5 和 ES6 混编。由于未转译成 ES5，运行时请确保浏览器的版本支持简单的 ES6 语法。
 > - 项目仅作练习，故此大量中间代码保留了下来。摘抄自 `element-ui` 官网的部分源代码未进行处理。
-> - 目前实现第一个阶段的纯静态渲染数据的方式，删除了数据的实时过滤，实测为商标数据量过大，前端检索效率不够理想。
+> - 第一个阶段的纯静态渲染数据的方式，删除了数据的实时过滤，实测为商标数据量过大，前端检索效率不够理想。
 > - 由于数据量过大，`el-tree` 节点过滤方法 `filter-node-method` 异常耗时，这里采取了使用手动按钮触发进行搜索过滤操作。
+> - 第二个阶段已完成，实现了一个用于搜索的 `GET` 类型的 `API`，返回 `json` 格式的数据。支持在进行检索时给 `.code` 传一个有效值进行编号的模糊搜索。
 
 ## TODO
 
@@ -65,3 +58,5 @@
 - [ ] 编号查找
 
 ***************
+
+[zgsbw]: http://sbj.saic.gov.cn/
